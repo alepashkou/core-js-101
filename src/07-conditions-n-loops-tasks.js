@@ -134,8 +134,12 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  const cond1 = rect1.top > rect2.top + rect2.height;
+  const cond2 = rect2.top > rect1.top + rect1.height;
+  const cond3 = rect1.left > rect2.left + rect2.width;
+  const cond4 = rect2.left > rect1.left + rect1.width;
+  return !(cond1 || cond2 || cond3 || cond4);
 }
 
 
@@ -328,8 +332,26 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const symbols = {
+    '<': '>',
+    '[': ']',
+    '{': '}',
+    '(': ')',
+  };
+
+  const arr = [];
+
+  for (let i = 0; i < str.length; i += 1) {
+    const el = str[i];
+    if (symbols[el]) {
+      arr.push(symbols[el]);
+    } else if ((el !== arr.pop())) {
+      return false;
+    }
+  }
+
+  return arr.length === 0;
 }
 
 
@@ -394,8 +416,17 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = Array(m1.length);
+  for (let i = 0; i < m1.length; i += 1) {
+    result[i] = Array(m2[0].length).fill(0);
+    for (let a = 0; a < m2[0].length; a += 1) {
+      for (let b = 0; b < m1[0].length; b += 1) {
+        result[i][a] += m2[b][a] * m1[i][b];
+      }
+    }
+  }
+  return result;
 }
 
 
