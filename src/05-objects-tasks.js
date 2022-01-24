@@ -116,32 +116,70 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  result: '',
+
+  id(value) {
+    this.err(2);
+    const on = Object.create(cssSelectorBuilder);
+    on.in = 2;
+    on.result = `${this.result}#${value}`;
+    return on;
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  element(value) {
+    this.err(1);
+    const on = Object.create(cssSelectorBuilder);
+    on.in = 1;
+    on.result = this.result + value;
+    return on;
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    this.err(4);
+    const on = Object.create(cssSelectorBuilder);
+    on.in = 4;
+    on.result = `${this.result}[${value}]`;
+    return on;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    this.err(3);
+    const on = Object.create(cssSelectorBuilder);
+    on.in = 3;
+    on.result = `${this.result}.${value}`;
+    return on;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+
+  pseudoElement(value) {
+    this.err(6);
+    const on = Object.create(cssSelectorBuilder);
+    on.in = 6;
+    on.result = `${this.result}::${value}`;
+    return on;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    this.err(5);
+    const on = Object.create(cssSelectorBuilder);
+    on.in = 5;
+    on.result = `${this.result}:${value}`;
+    return on;
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    const obj = Object.create(cssSelectorBuilder);
+    obj.result = `${selector1.result} ${combinator} ${selector2.result}`;
+    return obj;
+  },
+
+  stringify() {
+    return this.result;
+  },
+
+  err(num) {
+    if (this.in > num) throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    if ((this.in === num) && (num === 6 || num === 2 || num === 1)) throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
   },
 };
 
